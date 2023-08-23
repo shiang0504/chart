@@ -1,7 +1,8 @@
 <script setup>
-import { ref, onMounted, watchEffect} from 'vue'
+import { ref, onMounted, watch} from 'vue'
 import Chart from 'chart.js/auto';
 import axios from 'axios'
+import ChartDataLabels from 'chartjs-plugin-datalabels'; // 引入chartjs-plugin-datalabels(顯示圖型上的標籤)
 
 // dom
 const ctx1 = ref(null)
@@ -240,6 +241,7 @@ onMounted(()=>{
       }],
       labels: ['一月', '二月', '三月', '四月', '五月', '六月', '七月']
     },
+    plugins: [ChartDataLabels],
     options: {
       scales: {
         y: {
@@ -252,7 +254,21 @@ onMounted(()=>{
         title: {
           display: true,
           text: selectedDistrict.value,
-        }
+        },
+        datalabels: {
+          formatter: function(value, context) {
+            if(value) return value;
+            else return '';
+          },
+          font: {
+            weight: 'bold',
+            size: '14px',
+          },
+          color: '#dedede',
+          // anchor: 'end', // 錨點位於元素的哪裡'center'/'start'/'end'
+          // align: 'start', // 標籤位於錨點的哪裡'center'/'start'/'end'/'right'/'bottom'/'left'/'top'
+          // display: 'auto', // 標籤是否顯示true/false/'auto'(重疊時隱藏)
+        },
       }
     }
   }); 
@@ -274,6 +290,7 @@ onMounted(()=>{
         }
       ]
     },
+    plugins: [ChartDataLabels], //註冊chartjs-plugin-datalabels
     options: {
       responsive: true,
       plugins: {
@@ -283,6 +300,13 @@ onMounted(()=>{
         title: {
           display: true,
           text: '結婚對數結構分布',
+        },
+        datalabels: {
+          formatter: function(value, context) {
+            if(value) return value;
+            else return '';
+          // return context.chart.data.labels[context.dataIndex] + value; //標籤名稱+值
+          }
         }
       }
     },
@@ -304,6 +328,7 @@ onMounted(()=>{
         }
       ]
     },
+    plugins: [ChartDataLabels],
     options: {
       responsive: true,
       plugins: {
@@ -313,7 +338,13 @@ onMounted(()=>{
         title: {
           display: true,
           text: '離婚對數結構分布',
-        }
+        },
+        datalabels: {
+          formatter: function(value, context) {
+            if(value) return value;
+            else return '';
+          },
+        },
       }
     },
   });
@@ -333,6 +364,7 @@ onMounted(()=>{
         }
       ]
     },
+    plugins: [ChartDataLabels],
     options: {
       responsive: true,
       plugins: {
@@ -342,6 +374,12 @@ onMounted(()=>{
         title: {
           display: true,
           text: '出生數結構分布',
+        },
+        datalabels: {
+          formatter: function(value, context) {
+            if(value) return value;
+            else return '';
+          }
         }
       }
     },
@@ -362,6 +400,7 @@ onMounted(()=>{
         }
       ]
     },
+    plugins: [ChartDataLabels],
     options: {
       responsive: true,
       plugins: {
@@ -371,6 +410,12 @@ onMounted(()=>{
         title: {
           display: true,
           text: '死亡數結構分布',
+        },
+        datalabels: {
+          formatter: function(value, context) {
+            if(value) return value;
+            else return '';
+          }
         }
       }
     },
@@ -401,6 +446,34 @@ onMounted(()=>{
   RWD()
   window.addEventListener("resize", RWD);
 })
+
+// 開關Datalabels
+const showDatalabels = ref(true)
+watch(showDatalabels,()=>{
+  if(showDatalabels.value){
+    chart1.options.plugins.datalabels.display = true
+    donutChart1.options.plugins.datalabels.display = true
+    donutChart2.options.plugins.datalabels.display = true
+    donutChart3.options.plugins.datalabels.display = true
+    donutChart4.options.plugins.datalabels.display = true
+    chart1.update();
+    donutChart1.update();
+    donutChart2.update();
+    donutChart3.update();
+    donutChart4.update();
+  }else{
+    chart1.options.plugins.datalabels.display = false
+    donutChart1.options.plugins.datalabels.display = false
+    donutChart2.options.plugins.datalabels.display = false
+    donutChart3.options.plugins.datalabels.display = false
+    donutChart4.options.plugins.datalabels.display = false
+    chart1.update();
+    donutChart1.update();
+    donutChart2.update();
+    donutChart3.update();
+    donutChart4.update();
+  } 
+})
 </script>
 
 <template>
@@ -409,6 +482,7 @@ onMounted(()=>{
   <div class="buttons">
     <button v-for="button in buttons" @click="selectedDistrict=button; setChart()" :class="{active:selectedDistrict===button}" :key="button">{{ button }}</button>
   </div>
+  <button class="switch" @click="showDatalabels=!showDatalabels">{{ showDatalabels?'關閉顯示':'顯示資料' }}</button>
   <div class="chart" style="position: relative; height:40vh; width:90vw">
     <canvas ref="ctx1" id="ctx1"></canvas>
   </div>
@@ -456,7 +530,6 @@ h1{
   @include flex_center;
   flex-direction: column;
   .info{
-    // margin-top: 10px;
     width: 100%;
     text-align: end;
   }
@@ -492,5 +565,14 @@ h1{
 }
 .chart{
   @include flex_center;
+}
+
+.switch{
+  padding: 10px;
+  border-radius: 20px;
+  background: #181818;
+  border: 1px solid rgba(203, 203, 203, 0.708) ; 
+  color: aquamarine;
+  cursor: pointer;
 }
 </style>
