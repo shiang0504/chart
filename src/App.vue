@@ -10,6 +10,7 @@ const donut1 = ref(null)
 const donut2 = ref(null)
 const donut3 = ref(null)
 const donut4 = ref(null)
+const ctxWrap1 = ref(null)
 const donutWrap1 = ref(null)
 const donutWrap2 = ref(null)
 const donutWrap3 = ref(null)
@@ -423,7 +424,9 @@ onMounted(()=>{
 
 
   function RWD(){
-    if (window.innerWidth < 768) {
+    if (window.innerWidth < 1024 && window.innerWidth < window.innerHeight) { //手機-直
+      ctxWrap1.value.style.width = '100vw';
+      ctxWrap1.value.style.height = '40vh';
       donutWrap1.value.style.width =
       donutWrap1.value.style.height =
       donutWrap2.value.style.width =
@@ -431,8 +434,22 @@ onMounted(()=>{
       donutWrap3.value.style.width =
       donutWrap3.value.style.height =
       donutWrap4.value.style.width =
-      donutWrap4.value.style.height = '60vw' 
+      donutWrap4.value.style.height = '70vw' 
+    }else if(window.innerWidth < 1024 && window.innerWidth > window.innerHeight){ //手機-橫
+      ctxWrap1.value.style.width = '90vw';
+      ctxWrap1.value.style.height = '80vh';
+      donutWrap1.value.style.width =
+      donutWrap1.value.style.height =
+      donutWrap2.value.style.width =
+      donutWrap2.value.style.height =
+      donutWrap3.value.style.width =
+      donutWrap3.value.style.height =
+      donutWrap4.value.style.width =
+      donutWrap4.value.style.height = '40vw' 
+    
     }else{
+      ctxWrap1.value.style.width = '90vw';
+      ctxWrap1.value.style.height = '40vh';
       donutWrap1.value.style.width =
       donutWrap1.value.style.height =
       donutWrap2.value.style.width =
@@ -479,14 +496,14 @@ watch(showDatalabels,()=>{
 <template>
 <h1>112年臺北市出生死亡人口統計</h1>
 <div class="wrap">
-  <div class="buttons">
+  <div class="buttons districts">
     <button v-for="button in buttons" @click="selectedDistrict=button; setChart()" :class="{active:selectedDistrict===button}" :key="button">{{ button }}</button>
   </div>
   <button class="switch" @click="showDatalabels=!showDatalabels">{{ showDatalabels?'關閉顯示':'顯示資料' }}</button>
-  <div class="chart" style="position: relative; height:40vh; width:90vw">
+  <div class="chart" ref="ctxWrap1" style="position: relative; height: 40vh; width: 90vw">
     <canvas ref="ctx1" id="ctx1"></canvas>
   </div>
-  <div class="buttons">
+  <div class="buttons months">
     <button v-for="month in api_Url" @click="selectedMonth=month; setDonutChart()" :class="{active:selectedMonth===month}" :key="month">{{ monthTrans(month) }}</button>
   </div>
   <div class="donutWrap">
@@ -509,7 +526,7 @@ watch(showDatalabels,()=>{
 
 <style scoped lang="scss">
 @mixin mobile{
-  @media(max-width: 768px){
+  @media(max-width: 1024px){
     @content;
   }
 }
@@ -541,6 +558,8 @@ h1{
   @include flex_center;
   flex-wrap: nowrap;
   overflow-x: auto;
+  z-index: 1;
+  background: var(--color-background);
   @include mobile{
     justify-content: start;
   }
@@ -556,6 +575,15 @@ h1{
       box-shadow: 0 0 2px 2px aquamarine;
     }
   }
+  &.districts{
+    position: sticky;
+    top: 0px;
+  }
+  &.months{
+    position: sticky;
+    top: 65px;
+  }
+
 }
 .donutWrap{
   @include flex_center;
