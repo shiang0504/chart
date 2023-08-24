@@ -419,9 +419,8 @@ onMounted(()=>{
           }
         }
       }
-    },
+    }
   });
-
 
   function RWD(){
     if (window.innerWidth < 1024 && window.innerWidth < window.innerHeight) { //手機-直
@@ -445,7 +444,7 @@ onMounted(()=>{
       donutWrap3.value.style.width =
       donutWrap3.value.style.height =
       donutWrap4.value.style.width =
-      donutWrap4.value.style.height = '40vw' 
+      donutWrap4.value.style.height = '35vw' 
     
     }else{
       ctxWrap1.value.style.width = '90vw';
@@ -499,7 +498,7 @@ watch(showDatalabels,()=>{
   <div class="buttons districts">
     <button v-for="button in buttons" @click="selectedDistrict=button; setChart()" :class="{active:selectedDistrict===button}" :key="button">{{ button }}</button>
   </div>
-  <button class="switch" @click="showDatalabels=!showDatalabels">{{ showDatalabels?'關閉顯示':'顯示資料' }}</button>
+  <button class="switch" @click="showDatalabels=!showDatalabels">{{ showDatalabels?'關閉數據':'顯示數據' }}</button>
   <div class="chart" ref="ctxWrap1" style="position: relative; height: 40vh; width: 90vw">
     <canvas ref="ctx1" id="ctx1"></canvas>
   </div>
@@ -583,7 +582,6 @@ h1{
     position: sticky;
     top: 65px;
   }
-
 }
 .donutWrap{
   @include flex_center;
@@ -594,7 +592,6 @@ h1{
 .chart{
   @include flex_center;
 }
-
 .switch{
   padding: 10px;
   border-radius: 20px;
@@ -602,5 +599,11 @@ h1{
   border: 1px solid rgba(203, 203, 203, 0.708) ; 
   color: aquamarine;
   cursor: pointer;
+  @include mobile{
+    position: sticky;
+    top: 140px;
+    align-self: flex-start;
+    margin-left: 10px;
+  }
 }
 </style>
